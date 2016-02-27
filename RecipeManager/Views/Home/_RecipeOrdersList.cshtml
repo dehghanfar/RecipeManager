@@ -1,0 +1,27 @@
+﻿@model IEnumerable<RecipeManager.Models.RecipeModel>
+<div id="DivGrid">
+    <br />
+    <br />
+
+    <b>Current Order Recipe:</b>
+
+
+    <ul>
+
+
+        @if (Model != null )
+        {
+            foreach (var item in Model)
+            {
+                <br />
+
+                <li>@item.ItemUnit.ToString("0.00") @item.ItemName<a id="AddPlaintiff" onclick="RemoveRecipe(@item.ItemId, @item.ItemUnit)" class="LikeBtn"> X</a></li>
+            }
+        }
+        else
+        {
+            <br />
+            <li>There is no item yet</li>
+        }
+    </ul>
+</div>

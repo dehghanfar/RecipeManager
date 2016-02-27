@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Price Calculator";
+}
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/jqueryval")
+<h2>Recipe Manager</h2>
+<div class="form-group">
+    <div class="col-md-10">
+        <div id="MessageDiv" class="alert alert-warning hidden">
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-10">
+        Unit:
+        @Html.TextBox("Unit")
+        Items:
+        @Html.DropDownList("IngId", new SelectList(ViewBag.Items, "Id", "Description"))
+
+        <a onclick="AddRecipe()" class="LikeBtn" style="cursor: pointer; cursor: hand;">Add</a>
+    </div>
+
+  
+   
+</div>
+
+<div class="form-group">
+    <div class="col-md-10">
+        <div>
+            @Html.Action("_RecipeOrdersList", "Home")
+        </div>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-md-10">
+        <a id="Calculate" onclick="Calculate()" class="LikeBtn" style="cursor: pointer; cursor: hand;">Calculate Receipt</a>
+        <div>
+            @Html.Action("CalculateFinalRecipt", "Home")
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+            <script src="~/Scripts/app/Recipe.js"></script>
+        }

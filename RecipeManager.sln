@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeManager", "RecipeManager\RecipeManager.csproj", "{CC0C52E1-CF6F-4D65-8310-D9FC882319ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeManager.Tests", "RecipeManager.Tests\RecipeManager.Tests.csproj", "{78F5F390-9D69-4260-B9FF-212A5E88B877}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeManager.Domain", "RecipeManager.Domain\RecipeManager.Domain.csproj", "{93E85A9A-9766-414A-BDD8-C6184D194AA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeManager.Service", "RecipeManager.Service\RecipeManager.Service.csproj", "{2B130F7F-02AD-4E13-A40D-EF98D197A47D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC0C52E1-CF6F-4D65-8310-D9FC882319ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC0C52E1-CF6F-4D65-8310-D9FC882319ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC0C52E1-CF6F-4D65-8310-D9FC882319ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC0C52E1-CF6F-4D65-8310-D9FC882319ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78F5F390-9D69-4260-B9FF-212A5E88B877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78F5F390-9D69-4260-B9FF-212A5E88B877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78F5F390-9D69-4260-B9FF-212A5E88B877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78F5F390-9D69-4260-B9FF-212A5E88B877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93E85A9A-9766-414A-BDD8-C6184D194AA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93E85A9A-9766-414A-BDD8-C6184D194AA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93E85A9A-9766-414A-BDD8-C6184D194AA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93E85A9A-9766-414A-BDD8-C6184D194AA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B130F7F-02AD-4E13-A40D-EF98D197A47D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B130F7F-02AD-4E13-A40D-EF98D197A47D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B130F7F-02AD-4E13-A40D-EF98D197A47D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B130F7F-02AD-4E13-A40D-EF98D197A47D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dehghanfar.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = RecipeManager.Tests\\RecipeManager.Tests.csproj
+		SccProjectName1 = RecipeManager.Tests
+		SccLocalPath1 = RecipeManager.Tests
+		SccProjectUniqueName2 = RecipeManager\\RecipeManager.csproj
+		SccProjectName2 = RecipeManager
+		SccLocalPath2 = RecipeManager
+		SccProjectUniqueName3 = RecipeManager.Domain\\RecipeManager.Domain.csproj
+		SccProjectName3 = RecipeManager.Domain
+		SccLocalPath3 = RecipeManager.Domain
+		SccProjectUniqueName4 = RecipeManager.Service\\RecipeManager.Service.csproj
+		SccProjectName4 = RecipeManager.Service
+		SccLocalPath4 = RecipeManager.Service
+	EndGlobalSection
+EndGlobal
