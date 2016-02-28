@@ -145,7 +145,7 @@ namespace RecipeManager.Controllers
 
             decimal itemsToBeDiscounted = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IsOrganic select ingredient.Price*item.ItemUnit).Sum();
 
-
+            // the below code has been converted to the above code by resharper
             //decimal itemsToBeDiscounted = 0m;
             //foreach (var item in recipeList)
             //{
@@ -184,7 +184,7 @@ namespace RecipeManager.Controllers
          
             decimal itemsToBeTaxed = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IngredientType != (int) IngredientTypeEnum.Produce select ingredient.Price*item.ItemUnit).Sum();
 
-
+            // the below code has been converted to the above code by resharper
             //decimal itemsToBeTaxed = 0m;
             //foreach (var item in recipeList)
             //{
@@ -220,6 +220,8 @@ namespace RecipeManager.Controllers
         public decimal CalculateTotalCost(decimal tax, decimal discount, List<RecipeModel> recipeList)
         {
             decimal totalCost = (from item in recipeList let ingredient = _recipeService.GetItemById(item.ItemId) select ingredient.Price * item.ItemUnit).Aggregate<decimal, decimal>(0, (current, itemPrice) => current + itemPrice);
+
+            // the below code has been converted to the above code by resharper
             //foreach (var item in recipeList)
             //{
             //    var ingredient = _recipeService.GetItemById(item.ItemId);
