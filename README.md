@@ -1,5 +1,5 @@
 # RecipeManager
-RecipeManager
+
 
 The intent of this application is to calculate a receipt based different ingredient in a recipe.
 In the receipt we need to show Total Discount, Total Tax and total costs.
