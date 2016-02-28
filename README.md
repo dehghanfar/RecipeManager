@@ -67,7 +67,7 @@ SET IDENTITY_INSERT [dbo].[Ingredient] OFF
 
 4- run the application in the visual studio
 
-Below picutre is screen shot of the application.
+Below picture is screen shot of the application.
 
 ![alt text](http://s18.postimg.org/jifczwzk9/image.png "Logo Title Text 1")
 
