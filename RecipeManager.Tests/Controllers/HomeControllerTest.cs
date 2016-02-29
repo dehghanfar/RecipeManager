@@ -16,6 +16,7 @@ namespace RecipeManager.Tests.Controllers
         private HomeController _homeController;
         private IRecipeService _recipeService;
         private List<RecipeModel> _recipeModelList;
+        private ISettings _configSettings;
 
 
         [TestInitialize]
@@ -23,9 +24,15 @@ namespace RecipeManager.Tests.Controllers
         {
 
             _recipeService = MockRepository.GenerateMock<IRecipeService>();
-
-            _homeController = new HomeController(_recipeService);
+            _configSettings= MockRepository.GenerateMock<ISettings>();
+            _homeController = new HomeController(_recipeService, _configSettings);
             _recipeModelList = new List<RecipeModel>();
+
+
+            _configSettings.Expect(x => x.GetTaxPercentage()).Return(0.086m);
+
+            _configSettings.Expect(x => x.GetDiscountPercentage()).Return(0.05m);
+
 
             _recipeService.Expect(x => x.GetItemById(1)).Return(new Ingredient
             {

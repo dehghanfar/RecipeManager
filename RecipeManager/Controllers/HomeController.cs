@@ -12,10 +12,12 @@ namespace RecipeManager.Controllers
     {
 
         private readonly IRecipeService _recipeService;
+        ISettings _config;
 
-        public HomeController(IRecipeService recipeService)
+        public HomeController(IRecipeService recipeService, ISettings config)
         {
             _recipeService = recipeService;
+            _config = config;
         }
 
         public ActionResult Index()
@@ -82,12 +84,12 @@ namespace RecipeManager.Controllers
                 var itemToRemove = myRecipeModelList.FirstOrDefault(r => r.ItemId == itemId && r.ItemUnit == (decimal)itemUnit);
                 if (itemToRemove != null)
                 {
-                   
+
 
                     MySession.MySessionRecipeModel.Remove(itemToRemove);
 
                 }
-              
+
             }
 
             catch (Exception e)
@@ -136,9 +138,9 @@ namespace RecipeManager.Controllers
         public decimal CalculateDiscount(List<RecipeModel> recipeList)
         {
 
-          
 
-            decimal itemsToBeDiscounted = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IsOrganic select ingredient.Price*item.ItemUnit).Sum();
+
+            decimal itemsToBeDiscounted = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IsOrganic select ingredient.Price * item.ItemUnit).Sum();
 
             // the below code has been converted to the above code by resharper
             //decimal itemsToBeDiscounted = 0m;
@@ -166,8 +168,10 @@ namespace RecipeManager.Controllers
 
         private decimal CalculateDiscount(decimal itemPrice)
         {
+            
 
-            itemPrice = itemPrice - itemPrice * (1 - 0.05m);
+
+            itemPrice = itemPrice - itemPrice * (1 - _config.GetDiscountPercentage());
 
             double multiplier = Math.Pow(10, Convert.ToDouble(2));
             return Math.Ceiling(itemPrice * (decimal)multiplier) / (decimal)multiplier;
@@ -176,8 +180,8 @@ namespace RecipeManager.Controllers
         }
         public decimal CalculateTax(List<RecipeModel> recipeList)
         {
-         
-            decimal itemsToBeTaxed = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IngredientType != (int) IngredientTypeEnum.Produce select ingredient.Price*item.ItemUnit).Sum();
+
+            decimal itemsToBeTaxed = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IngredientType != (int)IngredientTypeEnum.Produce select ingredient.Price * item.ItemUnit).Sum();
 
             // the below code has been converted to the above code by resharper
             //decimal itemsToBeTaxed = 0m;
@@ -204,8 +208,8 @@ namespace RecipeManager.Controllers
 
         private decimal CalculateTax(decimal itemPrice)
         {
-
-            decimal tax = itemPrice * 0.086m;
+          
+            decimal tax = itemPrice * _config.GetTaxPercentage();
 
             return Math.Ceiling(tax / 0.07m) * 0.07m;
 

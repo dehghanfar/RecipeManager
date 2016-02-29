@@ -25,7 +25,8 @@ namespace RecipeManager
             kernel.Load(Assembly.GetExecutingAssembly());
 
             kernel.Bind<IRecipeService>().To<RecipeService>();
-         
+            kernel.Bind<ISettings>().To<Settings>();
+
 
             return kernel;
         }

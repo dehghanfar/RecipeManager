@@ -9,13 +9,11 @@ namespace RecipeManager
 {
     public class MySession
     {
-       
-
         public static List<RecipeModel> MySessionRecipeModel
         {
             get
             {
-                List < RecipeModel> session =
+                var session =
                   (List < RecipeModel>)HttpContext.Current.Session["MyStoredSessionRecipeModel"];
                 if (session == null)
                 {
