@@ -27,12 +27,8 @@ namespace RecipeManager.Tests.Controllers
             _configSettings= MockRepository.GenerateMock<ISettings>();
             _homeController = new HomeController(_recipeService, _configSettings);
             _recipeModelList = new List<RecipeModel>();
-
-
             _configSettings.Expect(x => x.GetTaxPercentage()).Return(0.086m);
-
             _configSettings.Expect(x => x.GetDiscountPercentage()).Return(0.05m);
-
 
             _recipeService.Expect(x => x.GetItemById(1)).Return(new Ingredient
             {
@@ -276,7 +272,6 @@ namespace RecipeManager.Tests.Controllers
             Assert.AreEqual(0.21m, result);
         }
 
-
         [TestMethod]
         public void CalculateTax_Recipe_WhenItemId_DosntExist()
         {
@@ -347,5 +342,6 @@ namespace RecipeManager.Tests.Controllers
             //assert
             Assert.AreEqual(8.91m, result);
         }
+
     }
 }

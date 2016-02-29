@@ -12,7 +12,7 @@ namespace RecipeManager.Controllers
     {
 
         private readonly IRecipeService _recipeService;
-        ISettings _config;
+        private readonly ISettings _config;
 
         public HomeController(IRecipeService recipeService, ISettings config)
         {
@@ -35,18 +35,10 @@ namespace RecipeManager.Controllers
         [HttpPost]
         public JsonResult AddRecipeOrders(float itemUnit, int itemId, string itemName)
         {
-            string message = "Success";
-
-            if (itemUnit <= 0)
-            {
-                message = "ZeroEntry";
-                return Json(new
-                {
-                    message
-                }, JsonRequestBehavior.AllowGet);
-            }
+            string message;
             try
             {
+                message = CheckRecipeUnit(itemUnit);
                 RecipeModel recipeModel = new RecipeModel
                 {
                     ItemId = itemId,
@@ -54,13 +46,9 @@ namespace RecipeManager.Controllers
                     ItemName = itemName,
 
                 };
-
-
                 var myRecipeModelList = MySession.MySessionRecipeModel;
-
                 myRecipeModelList?.Add(recipeModel);
             }
-
             catch (Exception e)
             {
                 message = "GeneralFailure";
@@ -73,25 +61,30 @@ namespace RecipeManager.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        private string CheckRecipeUnit(float itemUnit)
+        {
+            string output = "Success";
+            if (itemUnit <= 0)
+            {
+                output = "ZeroEntry";
+            }
+
+            return output;
+        }
+
         [HttpPost]
         public JsonResult RemoveRecipeOrders(float itemUnit, int itemId)
         {
             string message = "Success";
-
             try
             {
                 var myRecipeModelList = MySession.MySessionRecipeModel;
                 var itemToRemove = myRecipeModelList.FirstOrDefault(r => r.ItemId == itemId && r.ItemUnit == (decimal)itemUnit);
                 if (itemToRemove != null)
                 {
-
-
                     MySession.MySessionRecipeModel.Remove(itemToRemove);
-
                 }
-
             }
-
             catch (Exception e)
             {
                 message = "Failed";
@@ -104,7 +97,6 @@ namespace RecipeManager.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-
         public ActionResult _RecipeOrdersList()
         {
             var myRecipeModelList = MySession.MySessionRecipeModel;
@@ -112,16 +104,12 @@ namespace RecipeManager.Controllers
             return PartialView(myRecipeModelList);
         }
 
-
         public ActionResult CalculateFinalRecipt()
         {
             var myRecipeModelList = MySession.MySessionRecipeModel;
-
             var recipeReciptModel = new RecipeReciptModel();
-
             if (myRecipeModelList != null)
             {
-
                 recipeReciptModel.Discount = CalculateDiscount(myRecipeModelList);
                 recipeReciptModel.Tax = CalculateTax(myRecipeModelList);
                 recipeReciptModel.Total = CalculateTotalCost(recipeReciptModel.Tax, recipeReciptModel.Discount,
@@ -129,112 +117,43 @@ namespace RecipeManager.Controllers
             }
 
             return PartialView(recipeReciptModel);
-
-
-
         }
-
 
         public decimal CalculateDiscount(List<RecipeModel> recipeList)
         {
-
-
-
             decimal itemsToBeDiscounted = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IsOrganic select ingredient.Price * item.ItemUnit).Sum();
 
-            // the below code has been converted to the above code by resharper
-            //decimal itemsToBeDiscounted = 0m;
-            //foreach (var item in recipeList)
-            //{
-            //    if (item.ItemUnit > 0)
-            //    {
-            //        var ingredient = _recipeService.GetItemById(item.ItemId);
-
-            //        if (ingredient != null && ingredient.IsOrganic)
-            //        {
-
-            //            decimal itemPrice = ingredient.Price * item.ItemUnit;
-            //            itemsToBeDiscounted += itemPrice;
-            //        }
-            //    }
-
-            //}
-
-
-
             return CalculateDiscount(itemsToBeDiscounted);
-
         }
 
         private decimal CalculateDiscount(decimal itemPrice)
         {
-            
-
-
             itemPrice = itemPrice - itemPrice * (1 - _config.GetDiscountPercentage());
-
             double multiplier = Math.Pow(10, Convert.ToDouble(2));
+
             return Math.Ceiling(itemPrice * (decimal)multiplier) / (decimal)multiplier;
-
-
         }
         public decimal CalculateTax(List<RecipeModel> recipeList)
         {
-
             decimal itemsToBeTaxed = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IngredientType != (int)IngredientTypeEnum.Produce select ingredient.Price * item.ItemUnit).Sum();
 
-            // the below code has been converted to the above code by resharper
-            //decimal itemsToBeTaxed = 0m;
-            //foreach (var item in recipeList)
-            //{
-            //    if (item.ItemUnit > 0)
-            //    {
-            //        var ingredient = _recipeService.GetItemById(item.ItemId);
-
-
-            //        if (ingredient != null && ingredient.IngredientType != (int)IngredientTypeEnum.Produce)
-            //        {
-            //            decimal itemPrice = ingredient.Price * item.ItemUnit;
-            //            itemsToBeTaxed += itemPrice;
-            //        }
-            //    }
-
-            //}
-
-
             return CalculateTax(itemsToBeTaxed);
-
         }
 
         private decimal CalculateTax(decimal itemPrice)
         {
-          
             decimal tax = itemPrice * _config.GetTaxPercentage();
 
             return Math.Ceiling(tax / 0.07m) * 0.07m;
-
-
         }
 
         public decimal CalculateTotalCost(decimal tax, decimal discount, List<RecipeModel> recipeList)
         {
             decimal totalCost = (from item in recipeList let ingredient = _recipeService.GetItemById(item.ItemId) select ingredient.Price * item.ItemUnit).Aggregate<decimal, decimal>(0, (current, itemPrice) => current + itemPrice);
-
-            // the below code has been converted to the above code by resharper
-            //foreach (var item in recipeList)
-            //{
-            //    var ingredient = _recipeService.GetItemById(item.ItemId);
-            //    decimal itemPrice = ingredient.Price * item.ItemUnit;
-            //    totalCost = totalCost + itemPrice;
-            //}
-
             totalCost = totalCost + tax - discount;
-
-
             double multiplier = Math.Pow(10, Convert.ToDouble(2));
+
             return Math.Ceiling(totalCost * (decimal)multiplier) / (decimal)multiplier;
-
-
         }
 
     }
