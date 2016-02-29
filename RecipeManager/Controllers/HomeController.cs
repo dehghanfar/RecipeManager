@@ -38,16 +38,19 @@ namespace RecipeManager.Controllers
             string message;
             try
             {
-                message = CheckRecipeUnit(itemUnit);
-                RecipeModel recipeModel = new RecipeModel
+                message = CheckRecipeUnitMessage(itemUnit);
+                if (IsValidRecipeUnit(itemUnit))
                 {
-                    ItemId = itemId,
-                    ItemUnit = (decimal)itemUnit,
-                    ItemName = itemName,
+                    var recipeModel = new RecipeModel
+                    {
+                        ItemId = itemId,
+                        ItemUnit = (decimal) itemUnit,
+                        ItemName = itemName,
 
-                };
-                var myRecipeModelList = MySession.MySessionRecipeModel;
-                myRecipeModelList?.Add(recipeModel);
+                    };
+                    var myRecipeModelList = MySession.MySessionRecipeModel;
+                    myRecipeModelList.Add(recipeModel);
+                }
             }
             catch (Exception e)
             {
@@ -60,10 +63,14 @@ namespace RecipeManager.Controllers
                 message
             }, JsonRequestBehavior.AllowGet);
         }
-
-        private string CheckRecipeUnit(float itemUnit)
+        private bool IsValidRecipeUnit(float itemUnit)
         {
-            string output = "Success";
+            return !(itemUnit <= 0);
+        }
+
+        private string CheckRecipeUnitMessage(float itemUnit)
+        {
+            var output = "Success";
             if (itemUnit <= 0)
             {
                 output = "ZeroEntry";
@@ -75,7 +82,7 @@ namespace RecipeManager.Controllers
         [HttpPost]
         public JsonResult RemoveRecipeOrders(float itemUnit, int itemId)
         {
-            string message = "Success";
+            var message = "Success";
             try
             {
                 var myRecipeModelList = MySession.MySessionRecipeModel;
@@ -108,20 +115,18 @@ namespace RecipeManager.Controllers
         {
             var myRecipeModelList = MySession.MySessionRecipeModel;
             var recipeReciptModel = new RecipeReciptModel();
-            if (myRecipeModelList != null)
-            {
-                recipeReciptModel.Discount = CalculateDiscount(myRecipeModelList);
-                recipeReciptModel.Tax = CalculateTax(myRecipeModelList);
-                recipeReciptModel.Total = CalculateTotalCost(recipeReciptModel.Tax, recipeReciptModel.Discount,
-                    myRecipeModelList);
-            }
+            if (myRecipeModelList == null) return PartialView(recipeReciptModel);
+            recipeReciptModel.Discount = CalculateDiscount(myRecipeModelList);
+            recipeReciptModel.Tax = CalculateTax(myRecipeModelList);
+            recipeReciptModel.Total = CalculateTotalCost(recipeReciptModel.Tax, recipeReciptModel.Discount,
+                myRecipeModelList);
 
             return PartialView(recipeReciptModel);
         }
 
         public decimal CalculateDiscount(List<RecipeModel> recipeList)
         {
-            decimal itemsToBeDiscounted = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IsOrganic select ingredient.Price * item.ItemUnit).Sum();
+            var itemsToBeDiscounted = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IsOrganic select ingredient.Price * item.ItemUnit).Sum();
 
             return CalculateDiscount(itemsToBeDiscounted);
         }
@@ -129,29 +134,29 @@ namespace RecipeManager.Controllers
         private decimal CalculateDiscount(decimal itemPrice)
         {
             itemPrice = itemPrice - itemPrice * (1 - _config.GetDiscountPercentage());
-            double multiplier = Math.Pow(10, Convert.ToDouble(2));
+            var multiplier = Math.Pow(10, Convert.ToDouble(2));
 
             return Math.Ceiling(itemPrice * (decimal)multiplier) / (decimal)multiplier;
         }
         public decimal CalculateTax(List<RecipeModel> recipeList)
         {
-            decimal itemsToBeTaxed = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IngredientType != (int)IngredientTypeEnum.Produce select ingredient.Price * item.ItemUnit).Sum();
+            var itemsToBeTaxed = (from item in recipeList where item.ItemUnit > 0 let ingredient = _recipeService.GetItemById(item.ItemId) where ingredient != null && ingredient.IngredientType != (int)IngredientTypeEnum.Produce select ingredient.Price * item.ItemUnit).Sum();
 
             return CalculateTax(itemsToBeTaxed);
         }
 
         private decimal CalculateTax(decimal itemPrice)
         {
-            decimal tax = itemPrice * _config.GetTaxPercentage();
+            var tax = itemPrice * _config.GetTaxPercentage();
 
             return Math.Ceiling(tax / 0.07m) * 0.07m;
         }
 
         public decimal CalculateTotalCost(decimal tax, decimal discount, List<RecipeModel> recipeList)
         {
-            decimal totalCost = (from item in recipeList let ingredient = _recipeService.GetItemById(item.ItemId) select ingredient.Price * item.ItemUnit).Aggregate<decimal, decimal>(0, (current, itemPrice) => current + itemPrice);
+            var totalCost = (from item in recipeList let ingredient = _recipeService.GetItemById(item.ItemId) select ingredient.Price * item.ItemUnit).Aggregate<decimal, decimal>(0, (current, itemPrice) => current + itemPrice);
             totalCost = totalCost + tax - discount;
-            double multiplier = Math.Pow(10, Convert.ToDouble(2));
+            var multiplier = Math.Pow(10, Convert.ToDouble(2));
 
             return Math.Ceiling(totalCost * (decimal)multiplier) / (decimal)multiplier;
         }

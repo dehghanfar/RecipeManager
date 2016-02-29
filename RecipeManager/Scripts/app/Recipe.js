@@ -16,7 +16,8 @@
            
             if (data.message === "Success") {
              
-                $('#DivGrid').load( '/Home/_RecipeOrdersList');
+                $('#DivGrid').load('/Home/_RecipeOrdersList');
+                $("#MessageDiv").replaceWith("<div id=MessageDiv class='alert alert-warning hidden' ></div>");
 
             }
             if (data.message === "ZeroEntry") {
@@ -34,7 +35,6 @@
 
 };
 
-
 function RemoveRecipe(itemId, unitId) {
 
     if (confirm("Are you sure?")) {
@@ -50,6 +50,7 @@ function RemoveRecipe(itemId, unitId) {
             .done(function (data) {
                 if (data.message === "Success") {
                     $('#DivGrid').load('/Home/_RecipeOrdersList');
+                    $("#MessageDiv").replaceWith("<div id=MessageDiv class='alert alert-warning hidden' ></div>");
 
                 }
                 if (data.message === "Failed") {
