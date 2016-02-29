@@ -53,18 +53,10 @@ namespace RecipeManager.Controllers
 
                 };
 
-                var myRecipeModelList = (List<RecipeModel>)Session["MyStoredSessionRecipeModel"];
 
-                if (myRecipeModelList != null)
-                {
-                    myRecipeModelList.Add(recipeModel);
-                }
-                else
-                {
-                    myRecipeModelList = new List<RecipeModel> { recipeModel };
-                }
-                Session["MyStoredSessionRecipeModel"] = myRecipeModelList;
+                var myRecipeModelList = MySession.MySessionRecipeModel;
 
+                myRecipeModelList?.Add(recipeModel);
             }
 
             catch (Exception e)
@@ -86,13 +78,16 @@ namespace RecipeManager.Controllers
 
             try
             {
-                var myRecipeModelList = (List<RecipeModel>)Session["MyStoredSessionRecipeModel"];
+                var myRecipeModelList = MySession.MySessionRecipeModel;
                 var itemToRemove = myRecipeModelList.FirstOrDefault(r => r.ItemId == itemId && r.ItemUnit == (decimal)itemUnit);
                 if (itemToRemove != null)
                 {
-                    myRecipeModelList.Remove(itemToRemove);
+                   
+
+                    MySession.MySessionRecipeModel.Remove(itemToRemove);
+
                 }
-                Session["MyStoredSessionRecipeModel"] = myRecipeModelList;
+              
             }
 
             catch (Exception e)
@@ -110,7 +105,7 @@ namespace RecipeManager.Controllers
 
         public ActionResult _RecipeOrdersList()
         {
-            var myRecipeModelList = (List<RecipeModel>)Session["MyStoredSessionRecipeModel"];
+            var myRecipeModelList = MySession.MySessionRecipeModel;
 
             return PartialView(myRecipeModelList);
         }
@@ -118,7 +113,7 @@ namespace RecipeManager.Controllers
 
         public ActionResult CalculateFinalRecipt()
         {
-            var myRecipeModelList = (List<RecipeModel>)Session["MyStoredSessionRecipeModel"];
+            var myRecipeModelList = MySession.MySessionRecipeModel;
 
             var recipeReciptModel = new RecipeReciptModel();
 
